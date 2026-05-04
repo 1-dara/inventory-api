@@ -9,7 +9,8 @@ class Sale(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
-    staff_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    staff_id = Column(Integer, ForeignKey(
+        "inventory_users.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
     unit_price = Column(Float, nullable=False)
     total_price = Column(Float, nullable=False)

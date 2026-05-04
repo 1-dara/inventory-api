@@ -5,7 +5,7 @@ from app.database import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = "inventory_users"
 
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String, nullable=False)

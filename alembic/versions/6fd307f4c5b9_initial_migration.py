@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: aac008e3cd13
+Revision ID: 6fd307f4c5b9
 Revises: 
-Create Date: 2026-05-04 09:52:39.410099
+Create Date: 2026-05-04 11:07:38.026246
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'aac008e3cd13'
+revision: str = '6fd307f4c5b9'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,6 +30,18 @@ def upgrade() -> None:
     sa.UniqueConstraint('name')
     )
     op.create_index(op.f('ix_categories_id'), 'categories', ['id'], unique=False)
+    op.create_table('inventory_users',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('full_name', sa.String(), nullable=False),
+    sa.Column('email', sa.String(), nullable=False),
+    sa.Column('hashed_password', sa.String(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.Column('is_admin', sa.Boolean(), nullable=True),
+    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_inventory_users_email'), 'inventory_users', ['email'], unique=True)
+    op.create_index(op.f('ix_inventory_users_id'), 'inventory_users', ['id'], unique=False)
     op.create_table('suppliers',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -40,18 +52,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_suppliers_id'), 'suppliers', ['id'], unique=False)
-    op.create_table('users',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('full_name', sa.String(), nullable=False),
-    sa.Column('email', sa.String(), nullable=False),
-    sa.Column('hashed_password', sa.String(), nullable=False),
-    sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('is_admin', sa.Boolean(), nullable=True),
-    sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
-    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
     op.create_table('products',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
@@ -78,7 +78,7 @@ def upgrade() -> None:
     sa.Column('total_price', sa.Float(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=True),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
-    sa.ForeignKeyConstraint(['staff_id'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['staff_id'], ['inventory_users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_sales_id'), 'sales', ['id'], unique=False)
@@ -105,11 +105,11 @@ def downgrade() -> None:
     op.drop_table('sales')
     op.drop_index(op.f('ix_products_id'), table_name='products')
     op.drop_table('products')
-    op.drop_index(op.f('ix_users_id'), table_name='users')
-    op.drop_index(op.f('ix_users_email'), table_name='users')
-    op.drop_table('users')
     op.drop_index(op.f('ix_suppliers_id'), table_name='suppliers')
     op.drop_table('suppliers')
+    op.drop_index(op.f('ix_inventory_users_id'), table_name='inventory_users')
+    op.drop_index(op.f('ix_inventory_users_email'), table_name='inventory_users')
+    op.drop_table('inventory_users')
     op.drop_index(op.f('ix_categories_id'), table_name='categories')
     op.drop_table('categories')
     # ### end Alembic commands ###
