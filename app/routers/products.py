@@ -10,25 +10,62 @@ from app.routers.categories import get_current_user, get_admin_user
 
 router = APIRouter()
 
-# Get all products with optional filters
+# Get all products with optional filters and pagination
 
 
-@router.get("/", response_model=List[ProductResponse])
+@router.get("/", response_model=dict)
 async def get_products(
     category_id: Optional[int] = None,
     supplier_id: Optional[int] = None,
     is_active: Optional[bool] = None,
+    page: int = 1,
+    limit: int = 10,
     db: AsyncSession = Depends(get_db)
 ):
     query = select(Product)
-    if category_id:
+
+    if category_id is not None:
         query = query.where(Product.category_id == category_id)
-    if supplier_id:
+    if supplier_id is not None:
         query = query.where(Product.supplier_id == supplier_id)
     if is_active is not None:
         query = query.where(Product.is_active == is_active)
+
+    # Count total results
+    count_result = await db.execute(query)
+    total = len(count_result.scalars().all())
+
+    # Apply pagination
+    offset = (page - 1) * limit
+    query = query.offset(offset).limit(limit)
+
     result = await db.execute(query)
-    return result.scalars().all()
+    products = result.scalars().all()
+
+    # Convert to list of dicts manually (avoid Pydantic serialization issues)
+    products_list = []
+    for p in products:
+        products_list.append({
+            "id": p.id,
+            "name": p.name,
+            "description": p.description,
+            "price": p.price,
+            "quantity": p.quantity,
+            "low_stock_threshold": p.low_stock_threshold,
+            "category_id": p.category_id,
+            "supplier_id": p.supplier_id,
+            "is_active": p.is_active,
+            "created_at": p.created_at.isoformat(),
+            "updated_at": p.updated_at.isoformat(),
+        })
+
+    return {
+        "total": total,
+        "page": page,
+        "limit": limit,
+        "total_pages": (total + limit - 1) // limit,
+        "products": products_list
+    }
 
 # Get low stock products
 
