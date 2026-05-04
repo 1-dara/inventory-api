@@ -108,4 +108,4 @@ uvicorn app.main:app --reload
 7. **Visit the API docs**
 ```
 http://127.0.0.1:8000/docs
-```
+``` 
