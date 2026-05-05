@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 6fd307f4c5b9
+Revision ID: b87cbaa8641a
 Revises: 
-Create Date: 2026-05-04 11:07:38.026246
+Create Date: 2026-05-04 17:36:22.878258
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '6fd307f4c5b9'
+revision: str = 'b87cbaa8641a'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -69,6 +69,15 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_products_id'), 'products', ['id'], unique=False)
+    op.create_table('product_images',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=False),
+    sa.Column('image_url', sa.String(), nullable=False),
+    sa.Column('uploaded_at', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_product_images_id'), 'product_images', ['id'], unique=False)
     op.create_table('sales',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
@@ -103,6 +112,8 @@ def downgrade() -> None:
     op.drop_table('stock_movements')
     op.drop_index(op.f('ix_sales_id'), table_name='sales')
     op.drop_table('sales')
+    op.drop_index(op.f('ix_product_images_id'), table_name='product_images')
+    op.drop_table('product_images')
     op.drop_index(op.f('ix_products_id'), table_name='products')
     op.drop_table('products')
     op.drop_index(op.f('ix_suppliers_id'), table_name='suppliers')

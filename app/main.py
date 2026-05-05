@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import auth, categories, products, suppliers, stock, sales
+from app.routers import auth, categories, products, suppliers, stock, sales, product_images
 
 app = FastAPI(
     title="Inventory Management API",
@@ -16,6 +16,8 @@ app.include_router(
     suppliers.router, prefix="/api/suppliers", tags=["Suppliers"])
 app.include_router(stock.router, prefix="/api/stock", tags=["Stock"])
 app.include_router(sales.router, prefix="/api/sales", tags=["Sales"])
+app.include_router(product_images.router,
+                   prefix="/api/products", tags=["Product Images"])
 
 
 @app.get("/")

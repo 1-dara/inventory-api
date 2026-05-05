@@ -26,3 +26,4 @@ class Product(Base):
     supplier = relationship("Supplier", back_populates="products")
     stock_movements = relationship("Stock", back_populates="product")
     sales = relationship("Sale", back_populates="product")
+    images = relationship("ProductImage", back_populates="product")
