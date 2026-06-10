@@ -1,78 +1,78 @@
-# 🏪 Inventory Management API
+#  Inventory Management API
 
-A fully functional retail inventory management backend built with **FastAPI**, **PostgreSQL**, and **JWT authentication**.
+A fully functional, production-grade retail inventory management backend built with **FastAPI** and **PostgreSQL**. Deployed and live.
 
-## 🚀 Features
+ **Live API Docs:** https://inventory-api-vd7f.onrender.com/docs   
+ **GitHub:** https://github.com/1-dara/inventory-api
 
-- **User Authentication** — Register and login with JWT tokens
-- **Role Based Access** — Admin and Staff roles
-- **Categories** — Organize products into categories
-- **Suppliers** — Track product suppliers
-- **Products** — Full CRUD with stock tracking
-- **Stock Management** — Track every stock movement in and out
-- **Sales Recording** — Auto calculate prices and deduct stock
-- **Low Stock Alerts** — Get notified when stock is running low
+---
 
-## 🛠️ Tech Stack
+##  Features
 
-- **Framework** — FastAPI
-- **Database** — PostgreSQL
-- **ORM** — SQLAlchemy (async)
-- **Migrations** — Alembic
-- **Authentication** — JWT (python-jose)
-- **Password Hashing** — bcrypt (passlib)
-- **Validation** — Pydantic
+- **JWT Authentication** — Secure register and login with access tokens
+- **Role-Based Access Control** — Admin and Staff role separation
+- **Product Management** — Full CRUD with category and supplier linking
+- **Stock Tracking** — Complete audit trail of every stock movement (in/out)
+- **Low Stock Alerts** — Automatic alerts when products fall below threshold
+- **Sales Recording** — Auto price calculation and stock deduction on sale
+- **Price Snapshotting** — Historical price accuracy on all sales records
+- **Supplier Management** — Track who supplies each product
+- **Category Management** — Organize products into categories
+- **Auto-generated Docs** — Interactive Swagger UI at `/docs`
 
-## 🔑 API Endpoints
+---
+
+##  Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| FastAPI | Web framework |
+| PostgreSQL | Database |
+| SQLAlchemy (Async) | ORM |
+| Alembic | Database migrations |
+| JWT / OAuth2 | Authentication |
+| bcrypt | Password hashing |
+| Render | Deployment |
+| Pydantic | Data validation |
+
+---
+
+##  API Endpoints
 
 ### Auth
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Login and get JWT token |
-
-### Categories
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/categories/` | Get all categories |
-| POST | `/api/categories/` | Create category (admin only) |
-| PUT | `/api/categories/{id}` | Update category (admin only) |
-| DELETE | `/api/categories/{id}` | Delete category (admin only) |
-
-### Suppliers
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/suppliers/` | Get all suppliers |
-| POST | `/api/suppliers/` | Create supplier (admin only) |
-| PUT | `/api/suppliers/{id}` | Update supplier (admin only) |
-| DELETE | `/api/suppliers/{id}` | Delete supplier (admin only) |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/api/auth/register` | Register a new user | ❌ |
+| POST | `/api/auth/login` | Login and get JWT token | ❌ |
 
 ### Products
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/products/` | Get all products with filters |
-| GET | `/api/products/low-stock` | Get low stock products |
-| POST | `/api/products/` | Create product (admin only) |
-| PUT | `/api/products/{id}` | Update product (admin only) |
-| DELETE | `/api/products/{id}` | Delete product (admin only) |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/products/` | Get all products with filters | ❌ |
+| GET | `/api/products/low-stock` | Get low stock products | ✅ |
+| POST | `/api/products/` | Create a product | ✅ Admin only |
+| PUT | `/api/products/{id}` | Update a product | ✅ Admin only |
+| DELETE | `/api/products/{id}` | Delete a product | ✅ Admin only |
 
 ### Stock
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/stock/{product_id}` | Get stock movements |
-| POST | `/api/stock/` | Add stock movement (admin only) |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/stock/{product_id}` | Get stock movements | ✅ |
+| POST | `/api/stock/` | Add stock movement | ✅ Admin only |
 
 ### Sales
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/sales/` | Get all sales |
-| POST | `/api/sales/` | Record a sale |
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/sales/` | Get all sales | ✅ |
+| POST | `/api/sales/` | Record a sale | ✅ |
 
-## ⚙️ Setup & Installation
+---
+
+##  Setup & Installation
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/inventory-api.git
+git clone https://github.com/1-dara/inventory-api.git
 cd inventory-api
 ```
 
@@ -108,4 +108,13 @@ uvicorn app.main:app --reload
 7. **Visit the API docs**
 ```
 http://127.0.0.1:8000/docs
-``` 
+```
+
+---
+
+##  Author
+
+**Irene Peter-Okon Idara**  
+Backend Engineer  
+ 1ireneokon@gmail.com  
+ github.com/1-dara
